@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>数据口径与验证 · Android TV OS 运行健康平台</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  .role-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
+  .role{padding:18px 20px;border-left:4px solid var(--primary);}
+  .role.da{border-left-color:#0ea5e9;}
+  .role h4{font-size:14px;margin-bottom:4px;}
+  .role .who{font-size:12px;color:var(--muted);margin-bottom:9px;}
+  .role ul{list-style:none;display:flex;flex-direction:column;gap:5px;}
+  .role li{font-size:13px;color:#334155;padding-left:14px;position:relative;}
+  .role li::before{content:"";position:absolute;left:0;top:8px;width:4px;height:4px;border-radius:50%;background:var(--primary);}
+  .role.da li::before{background:#0ea5e9;}
+  .role .out{margin-top:10px;padding-top:9px;border-top:1px dashed var(--line);font-size:12px;color:var(--muted);}
+
+  .tbl-wrap{overflow-x:auto;}
+  .mono{font-family:ui-monospace,Consolas,monospace;font-size:12.5px;color:#334155;background:#f6f9fd;
+        padding:1px 6px;border-radius:4px;border:1px solid #e3ecf7;}
+
+  .find-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  .find{padding:18px 20px;}
+  .find .tag{display:inline-block;font-size:11.5px;color:var(--primary);background:#eff6ff;
+             border:1px solid #dbeafe;padding:2px 9px;border-radius:20px;margin-bottom:9px;}
+  .find h4{font-size:14.5px;line-height:1.5;margin-bottom:7px;}
+  .find p{font-size:13px;color:#475569;line-height:1.75;}
+
+  .heat{margin-top:6px;}
+  .heat table{font-size:12.5px;}
+  .heat td,.heat th{padding:9px 10px;text-align:center;}
+  .heat td:first-child,.heat th:first-child{text-align:left;font-weight:600;}
+  .heat .cell{display:inline-block;min-width:52px;padding:4px 0;border-radius:6px;font-weight:600;font-size:12.5px;}
+  @media (max-width:900px){.role-grid,.find-grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-in">
+    <div class="logo">
+      <span class="dot">TV</span>
+      Android TV OS 运行健康平台
+      <small>Health Analytics</small>
+    </div>
+    <div class="spacer"></div>
+    <nav class="nav">
+      <a href="index.html">健康概览</a>
+      <a href="verify.html" class="on">数据口径与验证</a>
+    </nav>
+    <span class="env-tag">Demo · 模拟数据</span>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="page-hd">
+    <div>
+      <h1>数据口径与验证</h1>
+      <div class="sub">数据分析岗产出：指标定义 · 数据质量 · 交叉验证 · 分析结论</div>
+    </div>
+  </div>
+
+  <!-- 分工 -->
+  <div class="role-grid" id="roles"></div>
+
+  <!-- 指标口径 -->
+  <div class="card" style="margin-bottom:16px;">
+    <div class="card-hd"><h3>一、指标口径定义</h3><span class="hint">口径统一后，页面上的每个数字都能追溯</span></div>
+    <div class="tbl-wrap" style="padding:14px 0 6px;">
+      <table>
+        <thead><tr><th>指标</th><th>业务定义</th><th>计算口径</th><th>判定标准</th><th>数据来源</th></tr></thead>
+        <tbody id="metricBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 数据质量 -->
+  <div class="card" style="margin-bottom:16px;">
+    <div class="card-hd"><h3>二、数据质量与一致性检查</h3><span class="hint">分析前的必做项：先确认数据能不能用</span></div>
+    <div class="tbl-wrap" style="padding:14px 0 6px;">
+      <table>
+        <thead><tr><th>检查项</th><th>结果</th><th>结论</th></tr></thead>
+        <tbody id="qualityBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 关键发现 -->
+  <div class="card" style="margin-bottom:16px;">
+    <div class="card-hd"><h3>三、分析结论</h3><span class="hint">全部由明细数据计算得出，可复现</span></div>
+    <div class="find-grid" id="findGrid" style="padding:16px 20px 20px;"></div>
+  </div>
+
+  <!-- 交叉验证 -->
+  <div class="card" style="margin-bottom:16px;">
+    <div class="card-hd"><h3>四、机型 × 应用 交叉验证</h3><span class="hint">单维度看不出的问题，交叉后才能定位</span></div>
+    <div class="heat" style="padding:8px 12px 16px;">
+      <div class="tbl-wrap"><table id="heatTable"></table></div>
+    </div>
+  </div>
+
+  <!-- 版本增益 -->
+  <div class="card">
+    <div class="card-hd"><h3>五、OS 版本升级收益</h3><span class="hint">同一机型内跨版本对照，排除机型差异干扰</span></div>
+    <div id="versionChart" style="width:100%;height:280px;"></div>
+  </div>
+
+  <div class="foot-note">
+    演示环境 · 数据为结构化模拟数据 · 所有口径与结论均可追溯到明细与计算过程
+  </div>
+</div>
+
+<script src="verify.js"></script>
+<script src="echarts.min.js"></script>
+<script>
+const V = window.TV_VERIFY;
+
+/* 分工 */
+document.getElementById('roles').innerHTML = `
+  <div class="card role">
+    <h4>开发岗</h4>
+    <div class="who">曾怡嫚 · 计算机科学与技术（2025 级）</div>
+    <ul>
+      <li>健康平台页面开发（概览 / 趋势 / 维度分析）</li>
+      <li>服务接口与数据接入（对接标准统计结果）</li>
+      <li>调试、性能与部署（页面 P95 ≤ 3s）</li>
+    </ul>
+    <div class="out">产出：可运行的健康概览与分析页面、数据接入层、部署说明</div>
+  </div>
+  <div class="card role da">
+    <h4>数据分析岗</h4>
+    <div class="who">（队友）· 同专业</div>
+    <ul>
+      <li>理解设备健康事件与大数据侧标准统计结果</li>
+      <li>数据分析：维度交叉、异常定位、趋势判断</li>
+      <li>产品化展示口径梳理与结果验证</li>
+    </ul>
+    <div class="out">产出：指标口径定义、数据质量检查、分析结论与验证记录</div>
+  </div>`;
+
+/* 指标口径 */
+document.getElementById('metricBody').innerHTML = V.metrics.map(m => `
+  <tr>
+    <td style="font-weight:600">${m.key}</td>
+    <td style="white-space:normal;min-width:220px">${m.def}</td>
+    <td><span class="mono">${m.formula}</span></td>
+    <td>${m.range}</td>
+    <td style="color:#64748b">${m.src}</td>
+  </tr>`).join('');
+
+/* 数据质量 */
+document.getElementById('qualityBody').innerHTML = V.quality.map(q => `
+  <tr>
+    <td style="font-weight:600;white-space:nowrap">${q.item}</td>
+    <td style="white-space:normal">${q.value}</td>
+    <td><span class="pill g">${q.result}</span></td>
+  </tr>`).join('');
+
+/* 关键发现 */
+document.getElementById('findGrid').innerHTML = V.findings.map(f => `
+  <div class="card find">
+    <span class="tag">${f.tag}</span>
+    <h4>${f.title}</h4>
+    <p>${f.detail}</p>
+  </div>`).join('');
+
+/* 交叉验证热力表（完整矩阵） */
+(function buildHeat() {
+  const V2 = window.TV_VERIFY;
+  const models = V2.models, apps = V2.apps;
+  const esc = s => s >= 85 ? '#10b981' : s >= 75 ? '#f59e0b' : '#ef4444';
+  const map = {};
+  V2.cross_full.forEach(c => map[c.model + '|' + c.app] = c.score);
+  let html = '<thead><tr><th>机型 \\ 应用</th>' + apps.map(a => `<th>${a}</th>`).join('') + '</tr></thead><tbody>';
+  models.forEach(m => {
+    html += `<tr><td>${m}</td>`;
+    apps.forEach(a => {
+      const s = map[m + '|' + a];
+      html += s === undefined
+        ? '<td style="color:#cbd5e1">—</td>'
+        : `<td><span class="cell" style="background:${esc(s)}18;color:${esc(s)}">${s}</span></td>`;
+    });
+    html += '</tr>';
+  });
+  document.getElementById('heatTable').innerHTML = html + '</tbody>';
+})();
+
+/* 版本增益图 */
+(function () {
+  const osList = V.os_versions;
+  const c = echarts.init(document.getElementById('versionChart'));
+  c.setOption({
+    tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
+    legend: { data: osList, right: 10, top: 6, itemWidth: 14, itemHeight: 8, textStyle: { fontSize: 12, color: '#64748b' } },
+    grid: { left: 56, right: 30, top: 42, bottom: 30 },
+    xAxis: { type: 'category', data: V.version_gain.map(v => v.model),
+             axisLine: { lineStyle: { color: '#e6ebf3' } }, axisTick: { show: false },
+             axisLabel: { color: '#64748b', fontSize: 12 } },
+    yAxis: { type: 'value', min: 40, max: 100, splitLine: { lineStyle: { color: '#f1f5fa' } },
+             axisLabel: { color: '#94a3b8', fontSize: 11 } },
+    series: osList.map((o, i) => ({
+      name: o, type: 'bar', barMaxWidth: 26,
+      itemStyle: { borderRadius: [4, 4, 0, 0],
+                   color: ['#c7d9f1', '#60a5fa', '#2563eb'][i] },
+      data: V.version_gain.map(v => v[o])
+    }))
+  });
+  window.addEventListener('resize', () => c.resize());
+})();
+</script>
+</body>
+</html>

@@ -203,3 +203,56 @@
   .role.da h4 .ico{color:#0ea5e9;}
   .hero-card .t{display:flex;align-items:center;justify-content:center;gap:5px;}
   .hero-card .t .ico{color:var(--primary);width:15px;height:15px;}
+
+  /* ---------- 悬停动效（仅桌面端，触屏不触发） ---------- */
+  @media (hover:hover) and (pointer:fine){
+
+    .card{
+      transition: transform .24s cubic-bezier(.34,1.25,.64,1),
+                  box-shadow .24s ease,
+                  border-color .24s ease;
+    }
+    .card:hover{
+      transform: translateY(-3px);
+      box-shadow: 0 14px 32px rgba(26,58,107,.13), 0 2px 6px rgba(26,58,107,.06);
+      border-color: #c3d7ee;
+    }
+
+    /* 指标卡：数字放大变蓝、图标轻微转动 */
+    .kpi .v{transition: transform .24s cubic-bezier(.34,1.25,.64,1), color .24s ease;}
+    .kpi:hover .v{transform: scale(1.07); color: var(--primary);}
+    .kpi .t .ico{transition: transform .3s cubic-bezier(.34,1.25,.64,1);}
+    .kpi:hover .t .ico{transform: scale(1.18) rotate(-7deg);}
+
+    /* 评分环卡片：绿色柔光 */
+    .score-card:hover{
+      box-shadow: 0 14px 32px rgba(16,185,129,.16), 0 2px 6px rgba(26,58,107,.05);
+      border-color: #b8e6d2;
+    }
+
+    /* AI 面板：只提阴影不上浮（内部要滚动，位移会晃眼） */
+    .overview .ai-card:hover{
+      transform: none;
+      box-shadow: 0 12px 30px rgba(26,58,107,.14);
+      border-color: #c3d7ee;
+    }
+
+    /* 区块标题图标：轻微转动呼应 */
+    .card-hd h3 .ico{transition: transform .3s cubic-bezier(.34,1.25,.64,1);}
+    .card:hover .card-hd h3 .ico{transform: rotate(-9deg) scale(1.12);}
+
+    /* 结论卡 / 问题卡：上浮幅度小一点，更稳重 */
+    .find:hover, .issue:hover, .honor:hover{transform: translateY(-2px);}
+
+    /* 表格行：高亮 + 左侧色条 */
+    tbody tr{transition: background .16s ease, box-shadow .16s ease;}
+    tbody tr:hover{background:#f6faff;box-shadow: inset 3px 0 0 var(--primary);}
+
+    /* 导航 / 按钮 */
+    .nav a{transition: color .16s ease, background .16s ease;}
+    .btn{transition: all .18s ease;}
+    .btn:hover{transform: translateY(-1px);}
+    .chips button{transition: all .16s ease;}
+    .chips button:hover{transform: translateY(-1px);}
+    .seg button{transition: all .16s ease;}
+  }

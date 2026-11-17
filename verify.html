@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>数据口径与验证 · Android TV OS 运行健康平台</title>
+<title>口径与验证 · TV 设备运行健康平台</title>
 <link rel="stylesheet" href="style.css">
 <style>
   .role-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
@@ -17,22 +17,23 @@
   .role.da li::before{background:#0ea5e9;}
   .role .out{margin-top:10px;padding-top:9px;border-top:1px dashed var(--line);font-size:12px;color:var(--muted);}
 
-  .tbl-wrap{overflow-x:auto;}
-  .mono{font-family:ui-monospace,Consolas,monospace;font-size:12.5px;color:#334155;background:#f6f9fd;
-        padding:1px 6px;border-radius:4px;border:1px solid #e3ecf7;}
+  .rule{display:flex;gap:12px;padding:13px 20px;border-bottom:1px solid #f3f7fc;}
+  .rule:last-child{border-bottom:0;}
+  .rule .no{flex:0 0 22px;height:22px;border-radius:50%;background:var(--primary);color:#fff;
+            font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;}
+  .rule .txt{font-size:13.5px;color:#334155;line-height:1.7;}
+  .rule .txt code{background:#f1f5fb;border:1px solid #e3ecf7;border-radius:4px;padding:1px 6px;font-size:12.5px;color:#0f2b57;}
 
-  .find-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
-  .find{padding:18px 20px;}
+  .recon{background:#fdf8ec;border:1px solid #f0dfb8;border-radius:10px;padding:14px 16px;margin:14px 20px 18px;}
+  .recon b{color:#8a6a1f;}
+  .recon p{font-size:13px;color:#6b5b3a;line-height:1.75;margin-top:5px;}
+
+  .find-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .find{padding:16px 18px;}
   .find .tag{display:inline-block;font-size:11.5px;color:var(--primary);background:#eff6ff;
-             border:1px solid #dbeafe;padding:2px 9px;border-radius:20px;margin-bottom:9px;}
-  .find h4{font-size:14.5px;line-height:1.5;margin-bottom:7px;}
-  .find p{font-size:13px;color:#475569;line-height:1.75;}
-
-  .heat{margin-top:6px;}
-  .heat table{font-size:12.5px;}
-  .heat td,.heat th{padding:9px 10px;text-align:center;}
-  .heat td:first-child,.heat th:first-child{text-align:left;font-weight:600;}
-  .heat .cell{display:inline-block;min-width:52px;padding:4px 0;border-radius:6px;font-weight:600;font-size:12.5px;}
+             border:1px solid #dbeafe;padding:2px 9px;border-radius:20px;margin-bottom:8px;}
+  .find h4{font-size:14px;line-height:1.5;margin-bottom:6px;}
+  .find p{font-size:12.8px;color:#475569;line-height:1.75;}
   @media (max-width:900px){.role-grid,.find-grid{grid-template-columns:1fr;}}
 </style>
 </head>
@@ -40,15 +41,13 @@
 
 <div class="topbar">
   <div class="topbar-in">
-    <div class="logo">
-      <span class="dot">TV</span>
-      Android TV OS 运行健康平台
-      <small>Health Analytics</small>
-    </div>
+    <div class="logo"><span class="dot">TV</span>TV 设备运行健康平台<small>Health Analytics</small></div>
     <div class="spacer"></div>
     <nav class="nav">
       <a href="index.html">健康概览</a>
-      <a href="verify.html" class="on">数据口径与验证</a>
+      <a href="verify.html" class="on">口径与验证</a>
+      <a href="perf.html">接口与压测</a>
+      <a href="issues.html">已知问题</a>
     </nav>
     <span class="env-tag">Demo · 模拟数据</span>
   </div>
@@ -57,158 +56,236 @@
 <div class="wrap">
   <div class="page-hd">
     <div>
-      <h1>数据口径与验证</h1>
-      <div class="sub">数据分析岗产出：指标定义 · 数据质量 · 交叉验证 · 分析结论</div>
+      <h1>口径与数据验证</h1>
+      <div class="sub">数据分析岗产出：口径定义 · 一致性对账 · 归因拆解 · 结果验证</div>
     </div>
   </div>
 
-  <!-- 分工 -->
-  <div class="role-grid" id="roles"></div>
+  <div class="role-grid">
+    <div class="card role">
+      <h4>开发岗</h4>
+      <div class="who">曾怡嫚 · 计算机科学与技术（2025 级）</div>
+      <ul>
+        <li>健康概览页面、版本 KPI、趋势与设备排行</li>
+        <li>数据接入：读取交付包三份数据并复算</li>
+        <li>可追溯：任意数字下钻到原始明细</li>
+      </ul>
+      <div class="out">产出：可运行页面 · 明细下钻 · 数据接入与复算逻辑</div>
+    </div>
+    <div class="card role da">
+      <h4>数据分析岗</h4>
+      <div class="who">（队友）· 同专业</div>
+      <ul>
+        <li>定义 5 条铁律口径并交付三份数据</li>
+        <li>归因拆解：崩溃率上升由什么构成</li>
+        <li>结果验证：KPI 与明细的一致性对账</li>
+      </ul>
+      <div class="out">产出：口径定义 · 交付包 · 归因结论 · 对账记录</div>
+    </div>
+  </div>
 
-  <!-- 指标口径 -->
+  <!-- 5 条铁律 -->
   <div class="card" style="margin-bottom:16px;">
-    <div class="card-hd"><h3>一、指标口径定义</h3><span class="hint">口径统一后，页面上的每个数字都能追溯</span></div>
-    <div class="tbl-wrap" style="padding:14px 0 6px;">
+    <div class="card-hd"><h3>一、5 条铁律口径</h3><span class="hint">全项目统一，开发实现必须按此执行</span></div>
+    <div id="rules" style="padding:6px 0 4px;"></div>
+  </div>
+
+  <!-- 对账 -->
+  <div class="card" style="margin-bottom:16px;">
+    <div class="card-hd"><h3>二、KPI 与明细的一致性对账</h3><span class="hint">交付包 KPI vs 本系统按明细复算</span></div>
+    <div style="padding:6px 0 0;">
       <table>
-        <thead><tr><th>指标</th><th>业务定义</th><th>计算口径</th><th>判定标准</th><th>数据来源</th></tr></thead>
-        <tbody id="metricBody"></tbody>
+        <thead><tr>
+          <th>版本</th><th>交付包崩溃率</th><th>复算崩溃率</th><th>差异</th>
+          <th>交付包健康度</th><th>复算健康度</th><th>是否一致</th>
+        </tr></thead>
+        <tbody id="reconBody"></tbody>
+      </table>
+    </div>
+    <div class="recon">
+      <b>对账结论：三组 KPI 与明细复算均存在差异，原因是两者样本不同源。</b>
+      <p>
+        交付包说明书已注明：<code>stats_result.json</code> 基于 <b>3000 条主数据集</b>，
+        而 <code>mock_log_data.csv</code> 明细只有 <b>1000 条</b>，两者<b>数值不可直接相加对比</b>。<br>
+        <b>本系统的处理</b>：页面上所有数字统一使用「明细复算值」，保证每个数字都能下钻到原始记录；
+        接入真实环境时，要求分析岗提供与明细同源的全量统计结果，或由本系统直接基于明细复算，避免出现两套数字。<br>
+        <b>这条差异本身就是一次验证发现</b>——如果直接采用交付包 KPI 而页面明细又对不上，用户点击下钻时就会发现数字矛盾。
+      </p>
+    </div>
+  </div>
+
+  <!-- 归因拆解 -->
+  <div class="grid2">
+    <div class="card">
+      <div class="card-hd"><h3>三、崩溃率上升的归因拆解</h3><span class="hint">V4.0.0 相对 V3.3.0</span></div>
+      <div id="attrChart" class="chart"></div>
+      <div id="attrNote" style="padding:0 20px 16px;font-size:12.5px;color:#475569;line-height:1.8;"></div>
+    </div>
+    <div class="card">
+      <div class="card-hd"><h3>四、开机异常率构成</h3><span class="hint">崩溃 vs 开机慢 的贡献</span></div>
+      <div id="bootChart" class="chart"></div>
+      <div id="bootNote" style="padding:0 20px 16px;font-size:12.5px;color:#475569;line-height:1.8;"></div>
+    </div>
+  </div>
+
+  <!-- 启动耗时分布 -->
+  <div class="card" style="margin-bottom:16px;">
+    <div class="card-hd"><h3>五、开机耗时分布</h3><span class="hint">按状态分组的分位值</span></div>
+    <div style="padding:6px 0 10px;">
+      <table>
+        <thead><tr><th>状态</th><th>记录数</th><th>最小</th><th>P50</th><th>P95</th><th>最大</th><th>说明</th></tr></thead>
+        <tbody id="durBody"></tbody>
       </table>
     </div>
   </div>
 
-  <!-- 数据质量 -->
-  <div class="card" style="margin-bottom:16px;">
-    <div class="card-hd"><h3>二、数据质量与一致性检查</h3><span class="hint">分析前的必做项：先确认数据能不能用</span></div>
-    <div class="tbl-wrap" style="padding:14px 0 6px;">
-      <table>
-        <thead><tr><th>检查项</th><th>结果</th><th>结论</th></tr></thead>
-        <tbody id="qualityBody"></tbody>
-      </table>
-    </div>
-  </div>
-
-  <!-- 关键发现 -->
-  <div class="card" style="margin-bottom:16px;">
-    <div class="card-hd"><h3>三、分析结论</h3><span class="hint">全部由明细数据计算得出，可复现</span></div>
+  <!-- 结论 -->
+  <div class="card">
+    <div class="card-hd"><h3>六、分析结论</h3><span class="hint">全部由明细计算，可下钻验证</span></div>
     <div class="find-grid" id="findGrid" style="padding:16px 20px 20px;"></div>
   </div>
 
-  <!-- 交叉验证 -->
-  <div class="card" style="margin-bottom:16px;">
-    <div class="card-hd"><h3>四、机型 × 应用 交叉验证</h3><span class="hint">单维度看不出的问题，交叉后才能定位</span></div>
-    <div class="heat" style="padding:8px 12px 16px;">
-      <div class="tbl-wrap"><table id="heatTable"></table></div>
-    </div>
-  </div>
-
-  <!-- 版本增益 -->
-  <div class="card">
-    <div class="card-hd"><h3>五、OS 版本升级收益</h3><span class="hint">同一机型内跨版本对照，排除机型差异干扰</span></div>
-    <div id="versionChart" style="width:100%;height:280px;"></div>
-  </div>
-
-  <div class="foot-note">
-    演示环境 · 数据为结构化模拟数据 · 所有口径与结论均可追溯到明细与计算过程
-  </div>
+  <div class="foot-note">数据源：数据分析岗交付包 · 口径未改动 · 所有结论可由明细复算</div>
 </div>
 
-<script src="verify.js"></script>
+<script src="merge.js"></script>
 <script src="echarts.min.js"></script>
 <script>
-const V = window.TV_VERIFY;
+const T = window.TV;
+const pct = v => v.toFixed(2) + '%';
+const hColor = s => s >= 95 ? '#10b981' : s >= 90 ? '#f59e0b' : '#ef4444';
 
-/* 分工 */
-document.getElementById('roles').innerHTML = `
-  <div class="card role">
-    <h4>开发岗</h4>
-    <div class="who">曾怡嫚 · 计算机科学与技术（2025 级）</div>
-    <ul>
-      <li>健康平台页面开发（概览 / 趋势 / 维度分析）</li>
-      <li>服务接口与数据接入（对接标准统计结果）</li>
-      <li>调试、性能与部署（页面 P95 ≤ 3s）</li>
-    </ul>
-    <div class="out">产出：可运行的健康概览与分析页面、数据接入层、部署说明</div>
-  </div>
-  <div class="card role da">
-    <h4>数据分析岗</h4>
-    <div class="who">（队友）· 同专业</div>
-    <ul>
-      <li>理解设备健康事件与大数据侧标准统计结果</li>
-      <li>数据分析：维度交叉、异常定位、趋势判断</li>
-      <li>产品化展示口径梳理与结果验证</li>
-    </ul>
-    <div class="out">产出：指标口径定义、数据质量检查、分析结论与验证记录</div>
-  </div>`;
+/* 5 条铁律 */
+const RULES = [
+  '总开机次数 = 全部记录条数（<code>正常 + 开机慢 + 异常崩溃</code>）',
+  '异常崩溃次数 = <code>status = 异常崩溃</code> 的记录数（不区分系统/应用）',
+  '崩溃率 = <code>异常崩溃次数 ÷ 总开机次数 × 100%</code>',
+  '开机异常率 = <code>(异常崩溃次数 + 开机慢次数) ÷ 总开机次数 × 100%</code>',
+  '健康度得分 = <code>100 × (1 − 崩溃率)</code>；崩溃率代入时必须用小数形式（÷100），否则会出现负分'
+];
+document.getElementById('rules').innerHTML = RULES.map((r, i) =>
+  `<div class="rule"><div class="no">${i + 1}</div><div class="txt">${r}</div></div>`).join('');
 
-/* 指标口径 */
-document.getElementById('metricBody').innerHTML = V.metrics.map(m => `
-  <tr>
-    <td style="font-weight:600">${m.key}</td>
-    <td style="white-space:normal;min-width:220px">${m.def}</td>
-    <td><span class="mono">${m.formula}</span></td>
-    <td>${m.range}</td>
-    <td style="color:#64748b">${m.src}</td>
-  </tr>`).join('');
+/* 对账表 */
+document.getElementById('reconBody').innerHTML = T.recalc.map((v, i) => {
+  const o = T.stats[i];
+  const diff = (v.crash_rate - o.crash_rate).toFixed(2);
+  const same = Math.abs(v.crash_rate - o.crash_rate) < 0.01;
+  return `<tr>
+    <td style="font-weight:600">${v.version}</td>
+    <td>${pct(o.crash_rate)}</td>
+    <td><b>${pct(v.crash_rate)}</b></td>
+    <td style="color:#b91c1c">${diff > 0 ? '+' : ''}${diff} pp</td>
+    <td>${o.health_score}</td>
+    <td><b style="color:${hColor(v.health_score)}">${v.health_score}</b></td>
+    <td><span class="pill ${same ? 'g' : 'y'}">${same ? '一致' : '样本不同'}</span></td>
+  </tr>`;
+}).join('');
 
-/* 数据质量 */
-document.getElementById('qualityBody').innerHTML = V.quality.map(q => `
-  <tr>
-    <td style="font-weight:600;white-space:nowrap">${q.item}</td>
-    <td style="white-space:normal">${q.value}</td>
-    <td><span class="pill g">${q.result}</span></td>
-  </tr>`).join('');
+/* 归因图 */
+(function attr() {
+  const A = T.attribution;
+  const c = echarts.init(document.getElementById('attrChart'));
+  c.setOption({
+    tooltip: { trigger: 'item', formatter: p => `${p.name}<br/>${p.value} 次 · ${p.percent}%` },
+    legend: { orient: 'vertical', right: 8, top: 'center', itemWidth: 10, itemHeight: 10,
+              textStyle: { fontSize: 12, color: '#64748b' } },
+    series: [{
+      type: 'pie', radius: ['46%', '70%'], center: ['36%', '50%'],
+      itemStyle: { borderColor: '#fff', borderWidth: 2 },
+      label: { show: false },
+      data: A.by_err_type.map((e, i) => ({
+        name: e.name, value: e.count,
+        itemStyle: { color: ['#ef4444', '#f59e0b', '#3b82f6'][i] }
+      }))
+    }]
+  });
+  const top = A.by_err_type[0];
+  document.getElementById('attrNote').innerHTML =
+    `<b>${T.recalc[2].version}</b> 崩溃率比 <b>${T.recalc[1].version}</b> 高 <b>${A.gap} 个百分点</b>，共 ${A.v4_crash_total} 次崩溃。<br>` +
+    `其中 <b>${top.name}</b> 占 ${top.pct}%（${top.count} 次），单独贡献 <b>${A.contrib[0].pp} pp</b> 的崩溃率。<br>` +
+    `崩溃分布较分散（应用维度最高仅 ${A.by_app[0].pct}%），指向系统层问题而非单个 App。`;
+})();
 
-/* 关键发现 */
-document.getElementById('findGrid').innerHTML = V.findings.map(f => `
+/* 开机异常构成 */
+(function boot() {
+  const c = echarts.init(document.getElementById('bootChart'));
+  const d = T.boot_mix;
+  c.setOption({
+    tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' },
+               valueFormatter: v => v + ' pp' },
+    legend: { data: ['开机慢', '异常崩溃'], top: 2, right: 8, itemWidth: 14, itemHeight: 8,
+              textStyle: { fontSize: 12, color: '#64748b' } },
+    grid: { left: 52, right: 24, top: 42, bottom: 30 },
+    xAxis: { type: 'category', data: d.map(x => x.version),
+             axisLine: { lineStyle: { color: '#e6ebf3' } }, axisTick: { show: false },
+             axisLabel: { color: '#64748b', fontSize: 12 } },
+    yAxis: { type: 'value', splitLine: { lineStyle: { color: '#f1f5fa' } },
+             axisLabel: { color: '#94a3b8', fontSize: 11, formatter: '{value}%' } },
+    series: [
+      { name: '开机慢', type: 'bar', stack: 'a', barMaxWidth: 46,
+        itemStyle: { color: '#f59e0b' }, data: d.map(x => x.slow_pp) },
+      { name: '异常崩溃', type: 'bar', stack: 'a', barMaxWidth: 46,
+        itemStyle: { color: '#ef4444', borderRadius: [4, 4, 0, 0] }, data: d.map(x => x.crash_pp) }
+    ]
+  });
+  const last = d[d.length - 1], first = d[0];
+  const crashPP = (last.crash_pp - first.crash_pp).toFixed(2);
+  const slowPP = (last.slow_pp - first.slow_pp).toFixed(2);
+  document.getElementById('bootNote').innerHTML =
+    `开机异常率从 ${first.version} 的 <b>${(first.slow_pp + first.crash_pp).toFixed(2)}%</b> 升到 ${last.version} 的 <b>${(last.slow_pp + last.crash_pp).toFixed(2)}%</b>，` +
+    `其中崩溃贡献 <b>${crashPP} pp</b>、开机慢贡献 <b>${slowPP} pp</b>——两者共同推高，<b>崩溃略多</b>，需要同时抓。`;
+})();
+
+/* 耗时分布 */
+const DUR_NOTE = { '正常': '基准组', '开机慢': '超过 2500ms 记为开机慢', '异常崩溃': '崩溃时提前结束，耗时不具参考性' };
+document.getElementById('durBody').innerHTML = ['正常', '开机慢', '异常崩溃'].map(k => {
+  const d = T.duration[k];
+  if (!d) return '';
+  const cls = k === '正常' ? 'g' : k === '异常崩溃' ? 'r' : 'y';
+  return `<tr><td><span class="pill ${cls}">${k}</span></td><td>${d.count}</td>
+    <td>${d.min} ms</td><td><b>${d.p50} ms</b></td><td>${d.p95} ms</td><td>${d.max} ms</td>
+    <td style="color:#64748b">${DUR_NOTE[k]}</td></tr>`;
+}).join('');
+
+/* 结论 */
+const A = T.attribution, D = T.duration;
+const FINDINGS = [
+  {
+    tag: '版本回归',
+    title: `${T.recalc[2].version} 是明显的版本回归`,
+    detail: `健康度 ${T.recalc[2].health_score} 分，比 ${T.recalc[0].version}（${T.recalc[0].health_score} 分）低 ${(T.recalc[0].health_score - T.recalc[2].health_score).toFixed(1)} 分；崩溃率 ${pct(T.recalc[2].crash_rate)}，是 ${T.recalc[0].version}（${pct(T.recalc[0].crash_rate)}）的 ${(T.recalc[2].crash_rate / T.recalc[0].crash_rate).toFixed(1)} 倍。`
+  },
+  {
+    tag: '归因',
+    title: `崩溃以 ${A.by_err_type[0].name} 为主，指向系统层`,
+    detail: `${A.by_err_type[0].name} 占 ${A.by_err_type[0].pct}%，${A.by_err_type[1].name} 与 ${A.by_err_type[2].name} 各占约 ${A.by_err_type[1].pct}%。崩溃应用分布分散（最高 ${A.by_app[0].pct}%），说明不是单个 App 引起，需要系统/驱动团队介入。`
+  },
+  {
+    tag: '开机异常',
+    title: `开机异常率翻倍，崩溃与开机慢各占一半`,
+    detail: `开机慢 ${D['开机慢'].count} 条，P50 ${D['开机慢'].p50} ms，是正常开机（${D['正常'].p50} ms）的 ${(D['开机慢'].p50 / D['正常'].p50).toFixed(1)} 倍。开机异常率从 ${T.boot_mix[0].version} 的 ${(T.boot_mix[0].slow_pp + T.boot_mix[0].crash_pp).toFixed(2)}% 升到 ${T.boot_mix[2].version} 的 ${(T.boot_mix[2].slow_pp + T.boot_mix[2].crash_pp).toFixed(2)}%，其中崩溃贡献 ${(T.boot_mix[2].crash_pp - T.boot_mix[0].crash_pp).toFixed(2)} pp、开机慢贡献 ${(T.boot_mix[2].slow_pp - T.boot_mix[0].slow_pp).toFixed(2)} pp，两条线要同时抓。`
+  },
+  {
+    tag: '数据质量',
+    title: `KPI 与明细不同源，已对账并统一口径`,
+    detail: `交付包 KPI 基于 3000 条主数据集，明细仅 1000 条，三组崩溃率差异 ${Math.abs(T.recalc[0].crash_rate - T.stats[0].crash_rate).toFixed(2)}~${Math.abs(T.recalc[2].crash_rate - T.stats[2].crash_rate).toFixed(2)} pp。页面统一采用明细复算值，保证可追溯；接入真实数据时需同源统计结果。`
+  }
+];
+document.getElementById('findGrid').innerHTML = FINDINGS.map(f => `
   <div class="card find">
     <span class="tag">${f.tag}</span>
     <h4>${f.title}</h4>
     <p>${f.detail}</p>
   </div>`).join('');
 
-/* 交叉验证热力表（完整矩阵） */
-(function buildHeat() {
-  const V2 = window.TV_VERIFY;
-  const models = V2.models, apps = V2.apps;
-  const esc = s => s >= 85 ? '#10b981' : s >= 75 ? '#f59e0b' : '#ef4444';
-  const map = {};
-  V2.cross_full.forEach(c => map[c.model + '|' + c.app] = c.score);
-  let html = '<thead><tr><th>机型 \\ 应用</th>' + apps.map(a => `<th>${a}</th>`).join('') + '</tr></thead><tbody>';
-  models.forEach(m => {
-    html += `<tr><td>${m}</td>`;
-    apps.forEach(a => {
-      const s = map[m + '|' + a];
-      html += s === undefined
-        ? '<td style="color:#cbd5e1">—</td>'
-        : `<td><span class="cell" style="background:${esc(s)}18;color:${esc(s)}">${s}</span></td>`;
-    });
-    html += '</tr>';
+window.addEventListener('resize', () => {
+  ['attrChart', 'bootChart'].forEach(id => {
+    const el = document.getElementById(id);
+    const inst = echarts.getInstanceByDom(el);
+    if (inst) inst.resize();
   });
-  document.getElementById('heatTable').innerHTML = html + '</tbody>';
-})();
-
-/* 版本增益图 */
-(function () {
-  const osList = V.os_versions;
-  const c = echarts.init(document.getElementById('versionChart'));
-  c.setOption({
-    tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
-    legend: { data: osList, right: 10, top: 6, itemWidth: 14, itemHeight: 8, textStyle: { fontSize: 12, color: '#64748b' } },
-    grid: { left: 56, right: 30, top: 42, bottom: 30 },
-    xAxis: { type: 'category', data: V.version_gain.map(v => v.model),
-             axisLine: { lineStyle: { color: '#e6ebf3' } }, axisTick: { show: false },
-             axisLabel: { color: '#64748b', fontSize: 12 } },
-    yAxis: { type: 'value', min: 40, max: 100, splitLine: { lineStyle: { color: '#f1f5fa' } },
-             axisLabel: { color: '#94a3b8', fontSize: 11 } },
-    series: osList.map((o, i) => ({
-      name: o, type: 'bar', barMaxWidth: 26,
-      itemStyle: { borderRadius: [4, 4, 0, 0],
-                   color: ['#c7d9f1', '#60a5fa', '#2563eb'][i] },
-      data: V.version_gain.map(v => v[o])
-    }))
-  });
-  window.addEventListener('resize', () => c.resize());
-})();
+});
 </script>
 </body>
 </html>

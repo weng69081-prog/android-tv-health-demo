@@ -188,3 +188,18 @@
     .overview{grid-template-columns:1fr;}
     .overview .ai-card{max-height:none;}
   }
+
+  /* ---------- 图标 ---------- */
+  .ico{
+    width:15px;height:15px;flex:0 0 auto;vertical-align:-2.5px;
+    stroke:currentColor;fill:none;stroke-width:2;
+    stroke-linecap:round;stroke-linejoin:round;
+  }
+  .kpi .t .ico{color:var(--primary);width:16px;height:16px;}
+  .card-hd h3 .ico{color:var(--primary);width:17px;height:17px;margin-right:5px;vertical-align:-3px;}
+  .score-card .lbl{display:flex;align-items:center;gap:5px;}
+  .score-card .lbl .ico{color:var(--primary);}
+  .role h4 .ico{color:var(--primary);width:16px;height:16px;margin-right:5px;vertical-align:-3px;}
+  .role.da h4 .ico{color:#0ea5e9;}
+  .hero-card .t{display:flex;align-items:center;justify-content:center;gap:5px;}
+  .hero-card .t .ico{color:var(--primary);width:15px;height:15px;}

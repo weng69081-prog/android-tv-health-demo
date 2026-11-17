@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>接口与压测 · TV 设备运行健康平台</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  .hero-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:16px;}
+  .hero-card{padding:20px;text-align:center;}
+  .hero-card .v{font-size:32px;font-weight:700;letter-spacing:-1px;}
+  .hero-card .t{font-size:13px;color:var(--muted);margin-top:2px;}
+  .hero-card .badge{margin-top:8px;display:inline-block;font-size:12px;padding:2px 10px;border-radius:20px;
+                    background:#ecfdf5;color:#047857;font-weight:600;}
+  .hero-card .badge.pass::before{content:"✓ ";}
+  pre{background:#0f172a;color:#e2e8f0;border-radius:10px;padding:14px 16px;overflow:auto;
+      font-size:12.5px;line-height:1.7;font-family:ui-monospace,Consolas,monospace;}
+  pre .c{color:#64748b;}
+  code.inline{background:#f1f5fb;border:1px solid #e3ecf7;border-radius:4px;padding:1px 6px;
+              font-size:12.5px;color:#0f2b57;font-family:ui-monospace,Consolas,monospace;}
+  .bar-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;font-size:13px;}
+  .bar-row .lb{width:64px;color:var(--muted);font-size:12.5px;}
+  .bar-row .bg{flex:1;height:10px;background:#eef2f8;border-radius:6px;overflow:hidden;}
+  .bar-row .bg i{display:block;height:100%;border-radius:6px;background:linear-gradient(90deg,#2563eb,#38bdf8);}
+  .bar-row .vv{width:70px;text-align:right;font-weight:600;font-size:12.5px;}
+  @media (max-width:900px){.hero-cards{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-in">
+    <div class="logo"><span class="dot">TV</span>TV 设备运行健康平台<small>Health Analytics</small></div>
+    <div class="spacer"></div>
+    <nav class="nav">
+      <a href="index.html">健康概览</a>
+      <a href="verify.html">口径与验证</a>
+      <a href="perf.html" class="on">接口与压测</a>
+      <a href="issues.html">已知问题</a>
+    </nav>
+    <span class="env-tag">Demo · 模拟数据</span>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="page-hd">
+    <div>
+      <h1>查询服务与压测记录</h1>
+      <div class="sub">对照需求书验收指标：P95 ≤ 3s · 成功率 ≥ 99% · 支持 5 并发</div>
+    </div>
+  </div>
+
+  <div class="hero-cards">
+    <div class="card hero-card">
+      <div class="v" style="color:#10b981" id="vP95">—</div>
+      <div class="t">P95 响应时间（验收线 3000ms）</div>
+      <div class="badge pass">通过</div>
+    </div>
+    <div class="card hero-card">
+      <div class="v" style="color:#10b981" id="vRate">—</div>
+      <div class="t">请求成功率（验收线 99%）</div>
+      <div class="badge pass">通过</div>
+    </div>
+    <div class="card hero-card">
+      <div class="v" style="color:#10b981" id="vConc">—</div>
+      <div class="t">并发用户数（验收线 5 人）</div>
+      <div class="badge pass">通过</div>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <div class="card-hd"><h3>延迟分布</h3><span class="hint" id="qpsNote">—</span></div>
+      <div id="latChart" class="chart"></div>
+    </div>
+    <div class="card">
+      <div class="card-hd"><h3>压测是怎么做的</h3><span class="hint">可复现</span></div>
+      <div style="padding:14px 20px 20px;font-size:13px;color:#334155;line-height:1.9;">
+        <div class="bar-row"><span class="lb">并发数</span><span style="font-weight:600">5 个线程同时发请求</span></div>
+        <div class="bar-row"><span class="lb">请求总数</span><span style="font-weight:600" id="nTotal">—</span></div>
+        <div class="bar-row"><span class="lb">预热</span><span>每类接口先跑一次，排除首次连接开销</span></div>
+        <div class="bar-row"><span class="lb">接口覆盖</span><span>KPI / 趋势 / 总览 / 设备排行 / 明细查询 / 归因</span></div>
+        <div class="bar-row"><span class="lb">统计口径</span><span>每请求计时（含网络与 JSON 解析），P50/P95/P99 取分位</span></div>
+        <p style="margin-top:12px;color:#64748b;font-size:12.5px">
+          测试脚本 <code class="inline">bench.py</code> 与结果 <code class="inline">bench_result.json</code> 一并交付，
+          换台机器重跑即可复现。
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:16px;">
+    <div class="card-hd"><h3>查询接口清单</h3><span class="hint">零依赖 Python 服务 · server.py</span></div>
+    <div style="padding:6px 0 10px;">
+      <table>
+        <thead><tr><th>接口</th><th>说明</th><th>参数</th><th>返回</th></tr></thead>
+        <tbody>
+          <tr><td><code class="inline">GET /api/summary</code></td><td>总览指标</td><td>—</td><td>总开机、崩溃数、崩溃率、开机异常率、健康度、P50/P95</td></tr>
+          <tr><td><code class="inline">GET /api/kpi</code></td><td>版本级 KPI</td><td>—</td><td>3 个版本的崩溃率、开机异常率、健康度（按铁律复算）</td></tr>
+          <tr><td><code class="inline">GET /api/trend</code></td><td>按周崩溃趋势</td><td>—</td><td>周列表 + 每版本的崩溃数序列</td></tr>
+          <tr><td><code class="inline">GET /api/devices</code></td><td>崩溃设备排行</td><td>limit</td><td>设备 ID + 崩溃次数</td></tr>
+          <tr><td><code class="inline">GET /api/detail</code></td><td>明细查询（可追溯）</td><td>version / status / device / limit / offset</td><td>分页明细 + 总数</td></tr>
+          <tr><td><code class="inline">GET /api/attr</code></td><td>崩溃归因</td><td>—</td><td>按错误类型 / 应用分组的次数与占比</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-hd"><h3>怎么启动</h3><span class="hint">面试现场可跑</span></div>
+    <div style="padding:14px 20px 20px;">
+      <pre><span class="c"># 1. 启动查询服务（无第三方依赖）</span>
+python server.py
+<span class="c"># → 查询服务已启动：http://127.0.0.1:8010  (数据 1000 条)</span>
+
+<span class="c"># 2. 跑压测，复现上面的数字</span>
+python bench.py
+<span class="c"># → P95 / 成功率 / 5 并发 三项对照验收指标</span></pre>
+      <p style="margin-top:12px;font-size:13px;color:#475569;line-height:1.8">
+        演示版页面默认使用静态数据（<code class="inline">merge.js</code>），保证任何环境打开都能看；
+        接口版使用同一份数据源（<code class="inline">mock_log_data.csv</code>），前端只需把数据来源换成
+        <code class="inline">fetch('/api/kpi')</code> 即可切换，页面结构不用改。
+      </p>
+    </div>
+  </div>
+
+  <div class="foot-note">压测环境：本机 Windows · Python 标准库 ThreadingHTTPServer · 数据量 1000 条</div>
+</div>
+
+<script src="echarts.min.js"></script>
+<script>
+/* 压测实测结果（bench.py 生成，见 bench_result.json） */
+const R = {
+  concurrency: 5, total_requests: 200, duration_s: 0.37, qps: 533.6,
+  success_rate: 100.0, p50_ms: 3.5, p95_ms: 25.7, p99_ms: 28.4,
+  min_ms: 1.0, max_ms: 28.8
+};
+
+document.getElementById('vP95').textContent = R.p95_ms + ' ms';
+document.getElementById('vRate').textContent = R.success_rate + '%';
+document.getElementById('vConc').textContent = R.concurrency + ' 人';
+document.getElementById('qpsNote').textContent =
+  `${R.total_requests} 个请求 / ${R.duration_s}s · ${R.qps} QPS`;
+document.getElementById('nTotal').textContent = R.total_requests + ' 个';
+
+const c = echarts.init(document.getElementById('latChart'));
+const cats = ['P50', 'P95', 'P99', '最快', '最慢'];
+const vals = [R.p50_ms, R.p95_ms, R.p99_ms, R.min_ms, R.max_ms];
+c.setOption({
+  tooltip: { trigger: 'axis', valueFormatter: v => v + ' ms' },
+  grid: { left: 58, right: 30, top: 26, bottom: 30 },
+  xAxis: { type: 'category', data: cats, axisLine: { lineStyle: { color: '#e6ebf3' } },
+           axisTick: { show: false }, axisLabel: { color: '#64748b', fontSize: 12 } },
+  yAxis: { type: 'value', splitLine: { lineStyle: { color: '#f1f5fa' } },
+           axisLabel: { color: '#94a3b8', fontSize: 11, formatter: '{value}ms' } },
+  series: [{
+    type: 'bar', data: vals, barMaxWidth: 44,
+    itemStyle: {
+      borderRadius: [5, 5, 0, 0],
+      color: p => p.dataIndex >= 2 ? '#93c5fd' : '#2563eb'
+    },
+    label: { show: true, position: 'top', fontSize: 12, color: '#475569', formatter: '{c} ms' },
+    markLine: {
+      silent: true, symbol: 'none',
+      data: [{ yAxis: 3000, lineStyle: { color: '#ef4444', type: 'dashed' },
+               label: { formatter: '验收线 3000ms', color: '#b91c1c', fontSize: 11, position: 'insideEndTop' } }]
+    }
+  }]
+});
+window.addEventListener('resize', () => c.resize());
+</script>
+</body>
+</html>

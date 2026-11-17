@@ -72,6 +72,28 @@
         <div class="d" id="kPassD">—</div>
       </div>
     </div>
+
+      <div class="card ai-card">
+    <div class="card-hd">
+      <h3>AI 智能分析</h3>
+      <span class="hint">基于当前数据作答，结论均附带数据依据与口径</span>
+    </div>
+    <div class="ai-body">
+      <div class="ai-input">
+        <input id="aiQ" placeholder="问点什么，例如：哪个版本最差？崩溃主要是哪类错误？" />
+        <button class="btn primary" onclick="askAI()">分析</button>
+      </div>
+      <div class="chips" id="chips"></div>
+      <div class="ans" id="ans">
+        <div class="ans-q" id="ansQ"></div>
+        <div class="ans-body">
+          <div class="concl" id="ansC"></div>
+          <ul id="ansL"></ul>
+          <div class="ev" id="ansE"></div>
+        </div>
+      </div>
+    </div>
+  </div>
   </div>
 
   <!-- 版本 KPI -->
@@ -114,28 +136,7 @@
     </div>
   </div>
 
-  <!-- AI -->
-  <div class="card ai-card">
-    <div class="card-hd">
-      <h3>AI 智能分析</h3>
-      <span class="hint">基于当前数据作答，结论均附带数据依据与口径</span>
-    </div>
-    <div class="ai-body">
-      <div class="ai-input">
-        <input id="aiQ" placeholder="问点什么，例如：哪个版本最差？崩溃主要是哪类错误？" />
-        <button class="btn primary" onclick="askAI()">分析</button>
-      </div>
-      <div class="chips" id="chips"></div>
-      <div class="ans" id="ans">
-        <div class="ans-q" id="ansQ"></div>
-        <div class="ans-body">
-          <div class="concl" id="ansC"></div>
-          <ul id="ansL"></ul>
-          <div class="ev" id="ansE"></div>
-        </div>
-      </div>
-    </div>
-  </div>
+
 
   <div class="foot-note">
     数据源：数据分析岗交付包（1000 条明细 + 版本 KPI + 看板数据）· 口径：5 条铁律 · 所有数字可由明细复算
@@ -384,6 +385,7 @@ function askAI(text) {
 /* URL 参数 */
 const q0 = new URLSearchParams(location.search).get('q');
 if (q0) { document.getElementById('aiQ').value = q0; askAI(q0); }
+else { document.getElementById('aiQ').value = '现在整体情况怎么样？'; askAI(); }
 
 window.addEventListener('resize', () => Object.values(charts).forEach(c => c && c.resize()));
 </script>

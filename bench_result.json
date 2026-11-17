@@ -1,0 +1,23 @@
+{
+ "concurrency": 5,
+ "rounds_per_user": 40,
+ "total_requests": 200,
+ "duration_s": 0.37,
+ "qps": 533.6,
+ "success": 200,
+ "success_rate": 100.0,
+ "p50_ms": 3.5,
+ "p95_ms": 25.7,
+ "p99_ms": 28.4,
+ "max_ms": 28.8,
+ "min_ms": 1.0,
+ "avg_ms": 7.8,
+ "endpoints": [
+  "/api/kpi",
+  "/api/trend",
+  "/api/summary",
+  "/api/devices?limit=5",
+  "/api/detail?version=V4.0.0&status=%E5%BC%82%E5%B8%B8%E5%B4%A9%E6%BA%83&limit=50",
+  "/api/attr"
+ ]
+}

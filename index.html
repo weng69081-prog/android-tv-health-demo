@@ -178,8 +178,8 @@ const hColor = s => s >= 95 ? '#10b981' : s >= 90 ? '#f59e0b' : '#ef4444';
       axisLine: { lineStyle: { width: 14, color: [[1, '#eef2f8']] } },
       pointer: { show: false }, axisTick: { show: false }, splitLine: { show: false },
       axisLabel: { show: false }, anchor: { show: false },
-      detail: { valueAnimation: true, offsetCenter: [0, '14%'],
-        formatter: v => v.toFixed(1) + ' 分', fontSize: 26, fontWeight: 'bolder', color: hColor(health) },
+      detail: { valueAnimation: true, offsetCenter: [0, '10%'],
+        formatter: v => v.toFixed(1), fontSize: 25, fontWeight: 'bolder', color: hColor(health) },
       data: [{ value: health }]
     }]
   });

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<style>
+  @page { size:A4; margin:0; }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:"Microsoft YaHei","PingFang SC",sans-serif;width:210mm;color:#22272e;
+       font-size:9.6pt;line-height:1.62;padding:13mm 14mm;}
+  .cover{border-bottom:2.2pt solid #1a3a6b;padding-bottom:8pt;margin-bottom:11pt;}
+  .cover h1{font-size:19pt;color:#12233f;letter-spacing:1pt;}
+  .cover .sub{font-size:10pt;color:#5b6b7c;margin-top:4pt;}
+  .cover .meta{font-size:8.6pt;color:#8a97a6;margin-top:7pt;line-height:1.7;}
+
+  h2{font-size:11.6pt;color:#fff;background:#1a3a6b;padding:5pt 10pt;border-radius:4pt;
+     margin:13pt 0 8pt;letter-spacing:.4pt;}
+  h3{font-size:10.2pt;color:#12233f;margin:9pt 0 4pt;padding-left:7pt;border-left:3pt solid #2f6ea8;}
+  .blk{margin-bottom:7pt;padding-left:10pt;}
+  .blk .n{display:inline-block;background:#eef3f9;color:#1a3a6b;font-weight:700;font-size:8.6pt;
+          padding:1pt 6pt;border-radius:3pt;margin-right:5pt;}
+  .blk .what{font-size:9.4pt;color:#33404f;}
+  .blk .say{margin-top:2pt;font-size:8.8pt;color:#2f6ea8;background:#f7fafd;
+            border-left:2pt solid #b9d3ee;padding:3pt 7pt;}
+  .blk .say::before{content:"面试这样说：";color:#8a97a6;font-size:8.2pt;}
+  .tip{background:#fdf8ec;border-left:3pt solid #d9b45e;padding:7pt 9pt;font-size:9pt;
+       color:#6b5b3a;margin:9pt 0;line-height:1.7;}
+  .foot{margin-top:10pt;border-top:.5pt dashed #c8d2dc;padding-top:5pt;
+        font-size:7.8pt;color:#98a3ae;text-align:center;}
+  table{width:100%;border-collapse:collapse;font-size:8.8pt;margin-top:5pt;}
+  th{background:#eef3f9;color:#1a3a6b;text-align:left;padding:4pt 7pt;font-weight:600;}
+  td{padding:4pt 7pt;border-bottom:.5pt solid #eef2f7;vertical-align:top;}
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <h1>TV 设备运行健康平台 · 页面说明书</h1>
+  <div class="sub">四个页面、每一块是干什么的、面试怎么讲</div>
+  <div class="meta">
+    数据源：数据分析岗交付包（1000 条明细 + 版本 KPI + 看板数据）· 口径：5 条铁律，未改动<br>
+    团队：曾怡嫚（开发岗）· 队友（数据分析岗）· 需求方：WhaleTV / Android TV OS 运行健康
+  </div>
+</div>
+
+<h2>一、这个平台到底在解决什么问题</h2>
+<div class="blk">
+  <div class="what">
+    Android TV 跑在各种电视上，会崩、会卡、开机慢。大数据那边已经把这些事件统计好了，
+    但产品、研发、QA 拿到一堆数字，看不出「哪台电视、哪个版本、哪个应用出了问题」。<br>
+    这个平台就是把这些数字变成<b>能看、能比、能问</b>的界面 —— 一句话：<b>电视的体检报告台</b>。
+  </div>
+</div>
+
+<h2>二、健康概览页（开发岗的主页）</h2>
+
+<h3>① 整体健康度（左边环形图）</h3>
+<div class="blk">
+  <div class="what">全公司所有版本、所有设备汇总出来的一个总分，现在 <b>95.3</b> 分。环是绿色的（≥95 绿、90-95 黄、&lt;90 红）。下面三个小数字是统计了几个版本、多少台设备、多少次开机。</div>
+  <div class="say">「整体 95.3 分，看着不错，但拆到版本就不一样了。」<b>这句是引导</b>，说完自然翻到下面的版本表。</div>
+</div>
+
+<h3>② 四个指标卡（中间 2×2）</h3>
+<div class="blk">
+  <div class="what">
+    <span class="n">崩溃率</span>4.70% —— 47 次崩溃 ÷ 1000 次开机。这是健康度的唯一决定因素。<br>
+    <span class="n">开机异常率</span>17.80% —— 崩溃 47 次 + 开机慢 131 次，合起来占总开机的比例。<br>
+    <span class="n">开机耗时</span>P50 1466ms / P95 4821ms —— 一半人开机在 1.5 秒内，但最慢的 5% 要 4.8 秒，这就是「开机慢」那批。<br>
+    <span class="n">崩溃设备</span>28/50 台 —— 一半以上的设备都崩过，说明不是个别机器坏了。
+  </div>
+  <div class="say">「这四个数对应四个问题：崩得多不多、开机顺不顺、慢在哪、是普遍问题还是个体问题。」</div>
+</div>
+
+<h3>③ 版本稳定性 KPI 表</h3>
+<div class="blk">
+  <div class="what">按 V3.2.0 / V3.3.0 / V4.0.0 三个版本横向对比。最狠的是 <b>V4.0.0 崩溃率 11.79%</b>，比 V3.2.0 的 1.95% 高了 6 倍，健康度从 98.1 掉到 88.2。<b>点「查看 ›」能弹出这个版本的原始记录。</b></div>
+  <div class="say">「新版反而更差 —— 这是典型的版本回归，要拦下来。」</div>
+</div>
+
+<h3>④ 崩溃数周趋势</h3>
+<div class="blk">
+  <div class="what">8 周、三个版本各一条线。V4.0.0（红线）整体在往上走，最后一周冲到 6 次。点任意一个点，能看那一周的崩溃明细。</div>
+  <div class="say">「不是偶发，是持续恶化 —— 最后一周尤其明显。」</div>
+</div>
+
+<h3>⑤ 崩溃次数 Top5 设备</h3>
+<div class="blk">
+  <div class="what">哪 5 台设备崩得最多（各 2-3 次）。点柱子能看这台设备的全部记录。</div>
+  <div class="say">「最多的一台也只崩了 3 次，说明不是某台机器的问题，是批量性的。」</div>
+</div>
+
+<h3>⑥ 最近告警</h3>
+<div class="blk">
+  <div class="what">最新 10 条异常记录：时间、版本、设备、开机耗时、状态（开机慢/异常崩溃）、错误类型（OOM / ANR / Kernel Panic）、关联应用。</div>
+  <div class="say">「这是研发实际会看的表 —— 一眼能看出是哪个应用、哪类错误。」</div>
+</div>
+
+<h3>⑦ AI 智能分析（右边）</h3>
+<div class="blk">
+  <div class="what">打个问题就出结论，而且<b>每条结论都带数据依据和口径说明</b>。六个预设问题可以直接点。答案不是模型编的，是本地按数据实时算出来的 —— 所以断网能用、数字可复现。</div>
+  <div class="say">点「哪个版本最差？」→「V4.0.0，健康度 88.2，崩溃率 11.79%…」然后补一句「这个答案下钻得到原始记录，不是模型编的」。</div>
+</div>
+
+<h2>三、口径与验证页（数据分析岗的产出）</h2>
+
+<h3>① 两张分工卡</h3>
+<div class="blk">
+  <div class="what">左边开发岗（页面、接口、数据接入、可追溯下钻），右边数据分析岗（定口径、做归因、验结果）。</div>
+  <div class="say">「这页是她做的部分 —— 数据靠不靠谱，看这里。」</div>
+</div>
+
+<h3>② 5 条铁律口径</h3>
+<div class="blk">
+  <div class="what">崩溃率、开机异常率、健康度这三个数<b>到底怎么算</b>，写成了 5 条规定。开发必须按这个实现，不能各算一套。</div>
+  <div class="say">「口径不统一，同一个数三个人算出三个结果 —— 所以先定死。」</div>
+</div>
+
+<h3>③ KPI 与明细的一致性对账 ← 最有说服力的一块</h3>
+<div class="blk">
+  <div class="what">交付包的 KPI（基于 3000 条主数据集）和我们按明细复算（1000 条）对不上，差 0.6~1.9 个百分点。原因是样本不同源。我们没藏着，把差异摊开，并说明页面统一用明细复算值，保证每个数字都能下钻。</div>
+  <div class="say">「对账的时候发现交付包两套数据样本不一样。我们没用那个看起来更漂亮的数，而是统一按明细算 —— 因为用户点进去要能看到原始记录。」<b>这句能直接证明你们真在验数据。</b></div>
+</div>
+
+<h3>④ 崩溃归因拆解</h3>
+<div class="blk">
+  <div class="what">V4.0.0 那 23 次崩溃按错误类型拆：<b>Kernel Panic 占 39%</b>（9 次）、OOM 30%、ANR 30%；按应用拆最分散，最高只占 21%。</div>
+  <div class="say">「Kernel Panic 是内核级崩溃，不是单个 App 能修的 —— 要转系统/驱动团队。这条结论直接决定该找谁。」</div>
+</div>
+
+<h3>⑤ 开机异常率构成</h3>
+<div class="blk">
+  <div class="what">把开机异常率拆成「崩溃贡献」和「开机慢贡献」两段。V4.0.0 涨到 32.82%，崩溃贡献 9.84 个百分点、开机慢贡献 8.86 个百分点。</div>
+  <div class="say">「两条线各占一半，不能只抓一个。」</div>
+</div>
+
+<h3>⑥ 开机耗时分布</h3>
+<div class="blk">
+  <div class="what">正常 / 开机慢 / 异常崩溃三组的记录数、最小、P50、P95、最大。开机慢的中位数 4529ms，是正常开机（1395ms）的 3.2 倍。</div>
+  <div class="say">「开机慢不是慢一点，是慢三倍 —— 用户能明确感知。」</div>
+</div>
+
+<h3>⑦ 分析结论（4 张卡片）</h3>
+<div class="blk">
+  <div class="what">四条结论：版本回归、崩溃以 Kernel Panic 为主、开机异常率翻倍、KPI 与明细不同源已对账。全部能下钻验证。</div>
+  <div class="say">「结论不是感觉，每条后面都挂着数据和口径。」</div>
+</div>
+
+<h2>四、接口与压测页（证明「这不是个静态页面」）</h2>
+
+<h3>① 三个验收指标卡</h3>
+<div class="blk">
+  <div class="what">P95 响应 <b>25.7 ms</b>（验收线 3000ms）、成功率 <b>100%</b>（验收线 99%）、并发 <b>5 人</b>（验收线 5 人）—— 三项全过。</div>
+  <div class="say">「需求书写的三条硬指标，我们都真跑了一次，不是估的。」</div>
+</div>
+
+<h3>② 延迟分布图</h3>
+<div class="blk">
+  <div class="what">P50 3.5ms / P95 25.7ms / P99 28.4ms / 最快 1ms / 最慢 28.8ms，红线是 3000ms 验收线。</div>
+  <div class="say">「最慢的一次也只用了 29 毫秒，离 3 秒的验收线还有 100 倍余量。」</div>
+</div>
+
+<h3>③ 压测怎么做的 + ④ 接口清单 + ⑤ 启动方式</h3>
+<div class="blk">
+  <div class="what">5 个线程 × 40 次 = 200 个请求，覆盖 6 个接口，含预热。接口清单列了 6 个查询接口（总览/KPI/趋势/设备/明细/归因）。启动只要两条命令。</div>
+  <div class="say">「脚本和结果都一起交付了，换台机器重跑就能复现。」</div>
+</div>
+
+<h2>五、已知问题页（主动交代短板）</h2>
+<div class="blk">
+  <div class="what">6 条问题，每条写清：现象、影响、原因/处理、方案。已经有 2 条解决了（接口已补、对账已做），4 条待解决（堆栈下钻、用户测试、开机慢归因、AI 用规则引擎）。下面还有一张按优先级排的下一步计划表。</div>
+  <div class="say">「还差什么我们自己列了 —— 主动说比被问出来好。」<b>这页是用来接招的</b>，他不问你就一句话带过。</div>
+</div>
+
+<div class="tip">
+  <b>演示节奏建议（10 分钟）</b><br>
+  1. 一句话讲问题（30 秒）→ 2. 健康概览：总分 → 指出 V4.0.0 回归 → 点下钻 → 问 AI 一句（3 分钟）<br>
+  3. 口径与验证：一句话带过「数字怎么算、怎么验的在这页」（1 分钟，他追问才展开）<br>
+  4. 接口与压测：「后端也做了，5 并发 P95 25 毫秒」（1 分钟）→ 5. 已知问题：一句话（1 分钟）→ 剩下答问
+</div>
+
+<div class="foot">
+  数据为结构化模拟数据（交付包口径）· 所有数字可由明细复算 · 页面地址：weng69081-prog.github.io/android-tv-health-demo
+</div>
+
+</body>
+</html>

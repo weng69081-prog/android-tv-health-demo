@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>已知问题与改进 · TV 设备运行健康平台</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  .issue{padding:18px 20px;margin-bottom:14px;border-left:4px solid #f59e0b;}
+  .issue.fixed{border-left-color:#10b981;}
+  .issue.wip{border-left-color:#2563eb;}
+  .issue-hd{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:10px;}
+  .issue-hd h4{font-size:15px;line-height:1.5;}
+  .badge{flex:0 0 auto;font-size:11.5px;padding:2px 10px;border-radius:20px;font-weight:600;}
+  .badge.todo{background:#fffbeb;color:#b45309;}
+  .badge.done{background:#ecfdf5;color:#047857;}
+  .badge.doing{background:#eff6ff;color:#1d4ed8;}
+  .kv{display:grid;grid-template-columns:64px 1fr;gap:6px 12px;font-size:13px;color:#475569;}
+  .kv dt{color:#94a3b8;font-size:12.5px;}
+  .kv dd{line-height:1.7;}
+  .kv dd code{background:#f1f5fb;border:1px solid #e3ecf7;border-radius:4px;padding:1px 5px;font-size:12.5px;}
+  .note{background:#f8fbff;border:1px solid #dbe7f6;border-radius:10px;padding:14px 16px;font-size:13px;color:#334155;line-height:1.8;margin-bottom:16px;}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-in">
+    <div class="logo"><span class="dot">TV</span>TV 设备运行健康平台<small>Health Analytics</small></div>
+    <div class="spacer"></div>
+    <nav class="nav">
+      <a href="index.html">健康概览</a>
+      <a href="verify.html">口径与验证</a>
+      <a href="perf.html">接口与压测</a>
+      <a href="issues.html" class="on">已知问题</a>
+    </nav>
+    <span class="env-tag">Demo · 模拟数据</span>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="page-hd">
+    <div>
+      <h1>已知问题与改进方案</h1>
+      <div class="sub">主动暴露问题，比被问出来强 —— 这也是「结果验证」的一部分</div>
+    </div>
+  </div>
+
+  <div class="note">
+    这一页是团队自己做的自我验证记录：当前 demo 与需求书要求之间还有哪些差距、每条差距的影响和下一步方案。
+    面试时如果被问到「这个东西还差什么」，直接翻这一页。
+  </div>
+
+  <div id="list"></div>
+
+  <div class="card" style="padding:20px;">
+    <h4 style="font-size:15px;margin-bottom:10px;">下一步排期（按优先级）</h4>
+    <table>
+      <thead><tr><th>优先级</th><th>任务</th><th>预计工时</th><th>对应验收指标</th></tr></thead>
+      <tbody>
+        <tr><td><span class="pill r">P0</span></td><td>接入查询服务（FastAPI + 数据落库），前端由静态数据改为接口调用</td><td>2 天</td><td>查询响应 / 成功率 / 并发</td></tr>
+        <tr><td><span class="pill r">P0</span></td><td>5 并发压测并记录 P50/P95、成功率</td><td>0.5 天</td><td>P95 ≤ 3s · 成功率 ≥ 99% · 5 并发</td></tr>
+        <tr><td><span class="pill y">P1</span></td><td>与企业侧对齐统计口径，拿到同源明细</td><td>待企业配合</td><td>数据一致性</td></tr>
+        <tr><td><span class="pill y">P1</span></td><td>组织 2-3 名目标用户做可用性测试，产出反馈与迭代记录</td><td>1 天</td><td>用户测试与反馈证据</td></tr>
+        <tr><td><span class="pill g">P2</span></td><td>崩溃下钻到堆栈、开机慢细分原因</td><td>3 天</td><td>分析深度</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="foot-note">本页内容会随迭代更新 · 当前版本：Demo v0.2</div>
+</div>
+
+<script>
+const ISSUES = [
+  {
+    status: 'fixed', badge: '已解决',
+    title: '没有服务端查询接口，查询性能无法验证',
+    rows: [
+      ['现象', '初版是纯前端静态页面，数据写在前端 <code>merge.js</code> 里，没有 HTTP 接口'],
+      ['影响', '需求书三条验收指标（P95 ≤ 3s、成功率 ≥ 99%、5 人并发）无处可测'],
+      ['处理', '已补 <code>server.py</code> 查询服务（零依赖），提供 summary / kpi / trend / devices / detail / attr 六个接口'],
+      ['结果', '5 并发 × 40 次 = 200 请求实测：P95 <b>25.7ms</b>、成功率 <b>100%</b>，三项验收指标全部通过（见「接口与压测」页）'],
+      ['遗留', '演示页面仍用静态数据保证任何环境可打开；接口版切换只需把数据来源换成 fetch，页面结构不变']
+    ]
+  },
+  {
+    status: 'fixed', badge: '已处理',
+    title: '交付包 KPI 与明细数据不同源，数字对不上',
+    rows: [
+      ['现象', '交付包崩溃率（3000 条主数据集）与本系统按明细复算（1000 条）存在 0.6~1.9 个百分点差异'],
+      ['影响', '若直接采用 KPI 而页面明细对不上，用户下钻时会发现数字矛盾'],
+      ['原因', '交付包说明书注明：<code>stats_result.json</code> 基于主数据集 3000 条，<code>mock_log_data.csv</code> 仅 1000 条抽样'],
+      ['方案', '页面统一采用「明细复算值」并保留交付包原值做对账展示；接入真实环境时要求同源数据']
+    ]
+  },
+  {
+    status: 'todo', badge: '待解决',
+    title: '崩溃只能看到错误类型，无法下钻到堆栈',
+    rows: [
+      ['现象', '明细里 <code>error_type</code> 只有 OOM / ANR / Kernel Panic 三类，没有堆栈与行号'],
+      ['影响', '能定位到「哪类错误」，定位不到「哪一行代码」，研发拿去还要二次查日志'],
+      ['原因', '交付包的模拟数据未包含堆栈字段'],
+      ['方案', '接入企业原始日志后补堆栈字段，前端做堆栈查看与同类聚合']
+    ]
+  },
+  {
+    status: 'todo', badge: '待解决',
+    title: '没有真实用户测试记录',
+    rows: [
+      ['现象', '目前只有开发与分析两人自测，没有目标用户（产品/QA/研发）的实操反馈'],
+      ['影响', '需求书「用户测试与反馈证据」这一项直接空缺'],
+      ['原因', '项目周期内未组织'],
+      ['方案', '找 2-3 名目标用户做 15 分钟任务型测试（任务：找出最差版本、解释崩溃原因），记录完成率、耗时与卡点，产出反馈与迭代对照表']
+    ]
+  },
+  {
+    status: 'todo', badge: '待解决',
+    title: '开机慢缺乏细分归因',
+    rows: [
+      ['现象', '开机慢记录只关联了 <code>app_name</code>，没有分阶段耗时（内核 / 系统服务 / 应用启动）'],
+      ['影响', '知道「慢」但不知道「慢在哪一段」，方案给不准'],
+      ['原因', '模拟数据未包含阶段耗时'],
+      ['方案', '接入分阶段 boot 打点数据（bootloader / kernel / system_server / launcher），按阶段做瀑布分析']
+    ]
+  },
+  {
+    status: 'todo', badge: '待解决',
+    title: 'AI 分析为规则引擎，非大模型',
+    rows: [
+      ['现象', 'AI 问答由本地规则匹配 + 数据实时计算实现，没有调用大模型'],
+      ['影响', '能覆盖预设问题，但自由提问的理解能力有限'],
+      ['原因', '保证演示稳定（断网可用、答案可复现），避免模型幻觉编数字'],
+      ['方案', '接入大模型时采用「答案必须引用结构化查询结果」的约束：先由引擎算出数字，模型只负责组织语言，不允许自行生成数字']
+    ]
+  }
+];
+
+document.getElementById('list').innerHTML = ISSUES.map(i => `
+  <div class="card issue ${i.status === 'fixed' ? 'fixed' : i.status === 'wip' ? 'wip' : ''}">
+    <div class="issue-hd">
+      <h4>${i.title}</h4>
+      <span class="badge ${i.status === 'fixed' ? 'done' : i.status === 'wip' ? 'doing' : 'todo'}">${i.badge}</span>
+    </div>
+    <dl class="kv">${i.rows.map(r => `<dt>${r[0]}</dt><dd>${r[1]}</dd>`).join('')}</dl>
+  </div>`).join('');
+</script>
+</body>
+</html>

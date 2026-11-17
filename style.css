@@ -150,3 +150,20 @@
   }
   .nav a:hover{color:var(--primary);}
   .nav a.on{background:#fff;color:var(--primary);font-weight:600;box-shadow:0 1px 2px rgba(16,24,40,.08);}
+
+  /* ---------- 明细抽屉（可追溯） ---------- */
+  .drawer{
+    position:fixed;top:0;right:-760px;width:760px;max-width:94vw;height:100%;
+    background:#fff;z-index:60;transition:right .26s cubic-bezier(.4,0,.2,1);
+    box-shadow:-10px 0 40px rgba(16,24,40,.16);display:flex;flex-direction:column;
+  }
+  .drawer.on{right:0;}
+  .drawer-hd{
+    padding:15px 20px;border-bottom:1px solid var(--line);
+    display:flex;align-items:center;justify-content:space-between;gap:12px;flex:0 0 auto;
+  }
+  .drawer-body{flex:1;overflow:auto;padding-bottom:24px;}
+  .drawer-body table{font-size:12.5px;}
+  .drawer-body th{position:sticky;top:0;background:#fff;z-index:2;}
+  .mask{position:fixed;inset:0;background:rgba(9,17,30,.34);z-index:55;display:none;}
+  .mask.on{display:block;}
